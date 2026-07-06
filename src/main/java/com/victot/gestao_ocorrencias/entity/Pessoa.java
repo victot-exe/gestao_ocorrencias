@@ -30,4 +30,10 @@ public class Pessoa {
         this.cargoFuncao = cargoFuncao;
         this.cpf = cpf;
     }
+
+    public void Atualizar(String nome, String cpf, String cargoFuncao) {
+        this.nome = nome;
+        this.cargoFuncao = cargoFuncao;
+        this.cpf = cpf;
+    }
 }

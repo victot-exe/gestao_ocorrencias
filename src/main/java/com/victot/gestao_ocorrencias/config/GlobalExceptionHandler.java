@@ -1,5 +1,6 @@
 package com.victot.gestao_ocorrencias.config;
 
+import com.victot.gestao_ocorrencias.exceptions.ResourceNotFoundException;
 import com.victot.gestao_ocorrencias.exceptions.ValidacaoNegocioException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,5 +28,12 @@ public class GlobalExceptionHandler {
                 .toList();
 
         return ResponseEntity.badRequest().body(Map.of("erros", mensagens));
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleResourceNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity
+                .notFound()
+                .build();
     }
 }

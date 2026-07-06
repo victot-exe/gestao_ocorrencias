@@ -1,4 +1,4 @@
-package com.victot.gestao_ocorrencias.dtos.request;
+package com.victot.gestao_ocorrencias.dtos.request.pessoas;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
