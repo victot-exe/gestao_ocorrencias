@@ -1,4 +1,4 @@
-package com.victot.gestao_ocorrencias.dtos.response;
+package com.victot.gestao_ocorrencias.dtos.response.pessoas;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

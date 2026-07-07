@@ -1,7 +1,7 @@
 package com.victot.gestao_ocorrencias.controller;
 
 import com.victot.gestao_ocorrencias.dtos.request.pessoas.*;
-import com.victot.gestao_ocorrencias.dtos.response.PessoaResponse;
+import com.victot.gestao_ocorrencias.dtos.response.pessoas.PessoaResponse;
 import com.victot.gestao_ocorrencias.service.PessoaService;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
