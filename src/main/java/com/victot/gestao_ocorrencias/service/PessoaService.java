@@ -2,7 +2,7 @@ package com.victot.gestao_ocorrencias.service;
 
 import com.victot.gestao_ocorrencias.dtos.request.pessoas.CriarPessoaRequest;
 import com.victot.gestao_ocorrencias.dtos.request.pessoas.EditarPessoaRequest;
-import com.victot.gestao_ocorrencias.dtos.response.PessoaResponse;
+import com.victot.gestao_ocorrencias.dtos.response.pessoas.PessoaResponse;
 import com.victot.gestao_ocorrencias.entity.Pessoa;
 import com.victot.gestao_ocorrencias.exceptions.ResourceNotFoundException;
 import com.victot.gestao_ocorrencias.exceptions.ValidacaoNegocioException;
@@ -62,7 +62,7 @@ public class PessoaService {
         var pageEntity = pessoaRepository.findAll(paginationRequest);
 
         if(pageEntity.isEmpty()){
-            throw new ResourceNotFoundException("Pessoa não encontrada.");
+            throw new ResourceNotFoundException("");
         }
 
         return pageEntity.map(this::converterParaResponse);
