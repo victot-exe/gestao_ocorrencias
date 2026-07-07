@@ -1,15 +1,14 @@
-package com.victot.gestao_ocorrencias.dtos.request;
+package com.victot.gestao_ocorrencias.dtos.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class CriarPessoaRequest {
+public class PessoaResponse {
+    private String id;
     private String nome;
     private String cpf;
     private String cargo;
