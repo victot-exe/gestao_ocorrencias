@@ -21,4 +21,7 @@ public class CriarPessoaRequest {
     @CPF(message = "O CPF fornecido é inválido.")
     private String cpf;
     private String cargo;
+    @NotBlank(message = "A senha é obrigatória.")
+    private String password;
+    private String confirmPassword;
 }

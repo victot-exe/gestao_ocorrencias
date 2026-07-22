@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
@@ -21,15 +22,19 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PessoaService {
+
     private final PessoaRepository pessoaRepository;
     private final List<ValidadorNegocio<? super CriarPessoaRequest>> criarPessoaValidators;
     private final List<ValidadorNegocio<EditarPessoaRequest>> editarPessoaValidators;
+    private final PasswordEncoder passwordEncoder;
 
-    //region Create
+    //region create
     public PessoaResponse create(CriarPessoaRequest request){
         validateCriarPessoa(request);
 
-        var pessoa = new Pessoa(request.getNome(), request.getCpf(), request.getCargo());
+        var passwordEncoded = passwordEncoder.encode(request.getPassword());
+
+        var pessoa = new Pessoa(request.getNome(), request.getCpf(), request.getCargo(), passwordEncoded);
         var pessoaSalva = pessoaRepository.save(pessoa);
         return converterParaResponse(pessoaSalva);
     }
