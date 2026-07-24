@@ -19,10 +19,12 @@ public class TokenService {
     public String generateToken(Pessoa pessoa){
         Date today = new Date();
         Date expirationDate = new Date(today.getTime() + 24*60*60*1000);
-//TODO Como inserir o Id da pessoa no token??
+
         return Jwts.builder()
                 .issuer("Gestao Ocorrencias API")
-                .subject(pessoa.getCpf()) // Guarda o CPF da pessoa dentro do token
+                .subject(pessoa.getCpf())
+                .claim("id", pessoa.getId())
+                .claim("role", pessoa.getPerfil().name())
                 .issuedAt(today)
                 .expiration(expirationDate)
                 .signWith(getChaveAssinatura())
@@ -40,6 +42,15 @@ public class TokenService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public String getPessoaIdFromToken(String token) {
+        return Jwts.parser()
+                .verifyWith((SecretKey) getChaveAssinatura())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("id", String.class);
     }
 
     private SecretKey getChaveAssinatura() {

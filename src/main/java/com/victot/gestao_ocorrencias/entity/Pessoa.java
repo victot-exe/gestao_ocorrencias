@@ -1,5 +1,6 @@
 package com.victot.gestao_ocorrencias.entity;
 
+import com.victot.gestao_ocorrencias.enums.PerfilUsuario;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ public class Pessoa implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String Id;
+    private String id;
 
     @Column(nullable = false, length = 100)
     private String nome;
@@ -30,26 +31,25 @@ public class Pessoa implements UserDetails {
 
     private String senha;
 
-    @Column()
-//    @Column(nullable = false)
-    private String cargoFuncao;//vai virar um tipo proprio tambem tablee funcoes
+    @Enumerated(EnumType.STRING)
+    private PerfilUsuario perfil;
 
-    public Pessoa(String nome, String cpf, String cargoFuncao, String senha) {
+    public Pessoa(String nome, String cpf, PerfilUsuario perfil, String senha) {
         this.nome = nome;
-        this.cargoFuncao = cargoFuncao;
+        this.perfil = perfil;
         this.cpf = cpf;
         this.senha = senha;
     }
 
-    public void Atualizar(String nome, String cpf, String cargoFuncao) {
+    public void Atualizar(String nome, String cpf, PerfilUsuario perfil) {
         this.nome = nome;
-        this.cargoFuncao = cargoFuncao;
+        this.perfil = perfil;
         this.cpf = cpf;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_CLIENTE"));
+        return List.of(new SimpleGrantedAuthority(this.perfil.getRole()));
     }
 
     @Override
