@@ -1,5 +1,6 @@
 package com.victot.gestao_ocorrencias.dtos.request.pessoas;
 
+import com.victot.gestao_ocorrencias.enums.PerfilUsuario;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,7 @@ public class CriarPessoaRequest {
     @NotBlank(message = "O CPF é obrigatório.")
     @CPF(message = "O CPF fornecido é inválido.")
     private String cpf;
-    private String cargo;
+    private PerfilUsuario perfilUsuario;
     @NotBlank(message = "A senha é obrigatória.")
     private String password;
     private String confirmPassword;

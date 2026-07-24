@@ -34,7 +34,7 @@ public class PessoaService {
 
         var passwordEncoded = passwordEncoder.encode(request.getPassword());
 
-        var pessoa = new Pessoa(request.getNome(), request.getCpf(), request.getCargo(), passwordEncoded);
+        var pessoa = new Pessoa(request.getNome(), request.getCpf(), request.getPerfilUsuario(), passwordEncoded);
         var pessoaSalva = pessoaRepository.save(pessoa);
         return converterParaResponse(pessoaSalva);
     }
@@ -83,7 +83,7 @@ public class PessoaService {
         var pessoa = pessoaRepository.findById(request.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("Pessoa não encontrada."));
 
-        pessoa.Atualizar(request.getNome(), request.getCpf(), request.getCargo());
+        pessoa.Atualizar(request.getNome(), request.getCpf(), request.getPerfilUsuario());
         pessoaRepository.save(pessoa);
         return converterParaResponse(pessoa);
     }
@@ -110,8 +110,7 @@ public class PessoaService {
         return new PessoaResponse(
                 entity.getId(),
                 entity.getNome(),
-                entity.getCpf(),
-                entity.getCargoFuncao()
+                entity.getCpf()
         );
     }
     //endregion

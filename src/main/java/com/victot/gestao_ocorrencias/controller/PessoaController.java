@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +25,7 @@ public class PessoaController {
     }
 
     @PostMapping
+
     public ResponseEntity<PessoaResponse> salvarPessoa(@Valid @RequestBody CriarPessoaRequest request){
         var response = pessoaService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -43,6 +45,7 @@ public class PessoaController {
     }
 
     @GetMapping("retornar-paginado")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<PessoaResponse>> retornarPaginado(@ParameterObject @PageableDefault(size = 15, sort = "nome", direction = Sort.Direction.ASC) Pageable paginationRequest){
         var response = pessoaService.getPaginado(paginationRequest);
         return ResponseEntity.ok(response);
