@@ -32,6 +32,7 @@ public class Pessoa implements UserDetails {
     private String senha;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "cargo_funcao")
     private PerfilUsuario perfil;
 
     public Pessoa(String nome, String cpf, PerfilUsuario perfil, String senha) {

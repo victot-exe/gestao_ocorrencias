@@ -1,6 +1,5 @@
 package com.victot.gestao_ocorrencias.config.security;
 
-import com.victot.gestao_ocorrencias.entity.Pessoa;
 import com.victot.gestao_ocorrencias.repository.PessoaRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -32,7 +31,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 var pessoa = pessoaRepository.findByCpf(cpf).orElse(null);
 
                 if (pessoa != null) {
-                    var authentication = new UsernamePasswordAuthenticationToken(pessoa, null, pessoa.getAuthorities());//TODO verificar como vou escolher a autoridade e tal, com,o isso vai funcionar
+                    var authentication = new UsernamePasswordAuthenticationToken(pessoa, null, pessoa.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
