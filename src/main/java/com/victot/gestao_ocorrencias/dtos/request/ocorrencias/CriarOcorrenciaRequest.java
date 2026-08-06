@@ -1,8 +1,10 @@
 package com.victot.gestao_ocorrencias.dtos.request.ocorrencias;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.victot.gestao_ocorrencias.enums.TipoModalidade;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,9 +15,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class CriarOcorrenciaRequest {
-    @UUID
-    @NotBlank(message = "Informe quem está abrindo o chamado.")
-    private String pessoaAberturaId;//TODO futuramente vai ser pego pelo token]
+
+    @JsonIgnore
+    private String pessoaAberturaId;
 
     @NotNull
     private TipoModalidade  tipoModalidade;

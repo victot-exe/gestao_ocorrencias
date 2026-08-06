@@ -1,6 +1,7 @@
 package com.victot.gestao_ocorrencias.service;
 
 import com.victot.gestao_ocorrencias.dtos.request.ocorrencias.CriarOcorrenciaRequest;
+import com.victot.gestao_ocorrencias.dtos.request.ocorrencias.EditarOcorrenciaRequest;
 import com.victot.gestao_ocorrencias.dtos.response.ocorrencias.OcorrenciaDetalhadoResponse;
 import com.victot.gestao_ocorrencias.dtos.response.ocorrencias.OcorrenciaResponseBase;
 import com.victot.gestao_ocorrencias.entity.Ocorrencia;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
 
 import java.util.List;
 
@@ -24,9 +26,10 @@ public class OcorrenciaService {
     private final OcorrenciaRepository ocorrenciaRepository;
     private final PessoaRepository pessoaRepository;
     private final List<ValidadorNegocio<? super CriarOcorrenciaRequest>> validatorCriarOcorrencia;
+    private final List<ValidadorNegocio<EditarOcorrenciaRequest>> validatorEditarOcorrencia;
 
     //region create
-    public OcorrenciaResponseBase criarOcorrencia(CriarOcorrenciaRequest request){
+    public OcorrenciaResponseBase create(CriarOcorrenciaRequest request){
 
         validateCriarOcorrencia(request);
 
@@ -56,6 +59,7 @@ public class OcorrenciaService {
     public OcorrenciaDetalhadoResponse getById(String id) {
         var ocorrencia = ocorrenciaRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Ocorrencia não encontrada."));
+
         return converterParaResponseDetalhado(ocorrencia);
     }
     //endregion
@@ -75,6 +79,35 @@ public class OcorrenciaService {
     }
     //endregion
 
+    //endregion
+
+    //region put
+    public OcorrenciaResponseBase edit(EditarOcorrenciaRequest request) {
+        validateEditarOcorrencia(request);
+
+        var ocorrencia = ocorrenciaRepository.findById(request.getId())
+                .orElseThrow(()-> new ResourceNotFoundException("Ocorrencia não encontrada."));
+
+        ocorrencia.editar(request.getTipoModalidade(), request.getDescricao(), request.getDataHoraOcorrencia());
+
+        ocorrenciaRepository.save(ocorrencia);
+        return converterParaResponseBase(ocorrencia);
+    }
+
+    private void validateEditarOcorrencia(EditarOcorrenciaRequest request){
+        Errors erros = new BeanPropertyBindingResult(request, "editarOcorrenciaRequest");
+        for(var validator: validatorEditarOcorrencia){
+            validator.validate(request, erros);
+        }
+
+        for(var validator: validatorCriarOcorrencia){
+            validator.validate(request, erros);
+        }
+
+        if(erros.hasErrors()){
+            throw new ValidacaoNegocioException(erros, "Falha ao preencher o formulário.");
+        }
+    }
     //endregion
 
     //region private methods

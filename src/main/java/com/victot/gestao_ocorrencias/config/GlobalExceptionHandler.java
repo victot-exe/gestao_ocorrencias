@@ -1,7 +1,9 @@
 package com.victot.gestao_ocorrencias.config;
 
+import com.victot.gestao_ocorrencias.exceptions.NotAuthException;
 import com.victot.gestao_ocorrencias.exceptions.ResourceNotFoundException;
 import com.victot.gestao_ocorrencias.exceptions.ValidacaoNegocioException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,5 +37,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .notFound()
                 .build();
+    }
+
+    @ExceptionHandler(NotAuthException.class)
+    public ResponseEntity<Map<String, String>> handleNotAuth(NotAuthException ex) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(Map.of("erros", ex.getMessage()));
     }
 }

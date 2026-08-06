@@ -39,4 +39,10 @@ public class Ocorrencia {
         this.descricao = descricao;
         this.dataHoraOcorrencia = dataHoraOcorrencia;
     }
+
+    public void editar(TipoModalidade modalidade, String descricao, LocalDateTime dataHoraOcorrencia) {
+        this.modalidade = modalidade;
+        this.descricao = descricao;
+        this.dataHoraOcorrencia = dataHoraOcorrencia;
+    }
 }
