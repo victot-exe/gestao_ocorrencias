@@ -1,5 +1,6 @@
 package com.victot.gestao_ocorrencias.entity;
 
+import com.victot.gestao_ocorrencias.enums.StatusOcorrencia;
 import com.victot.gestao_ocorrencias.enums.TipoModalidade;
 import com.victot.gestao_ocorrencias.enums.TipoModalidadeConverter;
 import jakarta.persistence.*;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,8 +36,20 @@ public class Ocorrencia {
     @Column(nullable = false)
     private LocalDateTime dataHoraOcorrencia;
 
+    @Column(name = "status_atual", nullable = false, length = 3)
+    private StatusOcorrencia statusAtual = StatusOcorrencia.CRI;
+
+    @OneToMany(mappedBy = "ocorrencia", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TratativaOcorrencia> tratativas = new ArrayList<>();
+
     public Ocorrencia(Pessoa pessoaAbertura, TipoModalidade modalidade, String descricao, LocalDateTime dataHoraOcorrencia) {
         this.pessoaAbertura = pessoaAbertura;
+        this.modalidade = modalidade;
+        this.descricao = descricao;
+        this.dataHoraOcorrencia = dataHoraOcorrencia;
+    }
+
+    public void editar(TipoModalidade modalidade, String descricao, LocalDateTime dataHoraOcorrencia) {
         this.modalidade = modalidade;
         this.descricao = descricao;
         this.dataHoraOcorrencia = dataHoraOcorrencia;

@@ -18,6 +18,6 @@ public class ValidarPessoaExistenteParaCriarOcorrencia implements ValidadorNegoc
 
         if(existe) return;
 
-        errors.rejectValue("pessoaAberturaId", "id.inexistente", "Não uma pessoa com este Id cadastrado.");
+        errors.rejectValue("pessoaAberturaId", "id.inexistente", "Não há uma pessoa com este Id cadastrado.");
     }
 }

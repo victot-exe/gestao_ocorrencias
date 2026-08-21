@@ -16,4 +16,16 @@ public enum TipoModalidade {
         this.codigo = codigo;
         this.nome = nome;
     }
+
+    public static TipoModalidade doCodigo(String codigo) {
+        if (codigo == null) {
+            return null;
+        }
+        for (TipoModalidade modalidade : values()) {
+            if (modalidade.getCodigo().equals(codigo)) {
+                return modalidade;
+            }
+        }
+        throw new IllegalArgumentException("Código de modalidade inválido: " + codigo);
+    }
 }

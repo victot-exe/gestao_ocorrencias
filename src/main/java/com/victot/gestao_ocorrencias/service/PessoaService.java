@@ -4,7 +4,7 @@ import com.victot.gestao_ocorrencias.dtos.request.pessoas.CriarPessoaRequest;
 import com.victot.gestao_ocorrencias.dtos.request.pessoas.EditarPessoaRequest;
 import com.victot.gestao_ocorrencias.dtos.response.pessoas.PessoaResponse;
 import com.victot.gestao_ocorrencias.entity.Pessoa;
-import com.victot.gestao_ocorrencias.exceptions.ResourceNotFoundException;
+import com.victot.gestao_ocorrencias.exceptions.ResourceNotFoundLocalException;
 import com.victot.gestao_ocorrencias.exceptions.ValidacaoNegocioException;
 import com.victot.gestao_ocorrencias.repository.PessoaRepository;
 import com.victot.gestao_ocorrencias.service.validation.ValidadorNegocio;
@@ -56,7 +56,7 @@ public class PessoaService {
     //region byId
     public PessoaResponse getById(String id) {
         var pessoa = pessoaRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("Pessoa não encontrada."));
+                .orElseThrow(()-> new ResourceNotFoundLocalException("Pessoa não encontrada."));
 
         return converterParaResponse(pessoa);
     }
@@ -65,10 +65,6 @@ public class PessoaService {
     //region paginado
     public Page<PessoaResponse> getPaginado(Pageable paginationRequest) {
         var pageEntity = pessoaRepository.findAll(paginationRequest);
-
-        if(pageEntity.isEmpty()){
-            throw new ResourceNotFoundException("");
-        }
 
         return pageEntity.map(this::converterParaResponse);
     }
@@ -81,7 +77,7 @@ public class PessoaService {
         validateEditarPessoa(request);
 
         var pessoa = pessoaRepository.findById(request.getId())
-                .orElseThrow(()-> new ResourceNotFoundException("Pessoa não encontrada."));
+                .orElseThrow(()-> new ResourceNotFoundLocalException("Pessoa não encontrada."));
 
         pessoa.Atualizar(request.getNome(), request.getCpf(), request.getPerfilUsuario());
         pessoaRepository.save(pessoa);
