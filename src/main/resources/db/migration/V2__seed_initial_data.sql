@@ -1,9 +1,9 @@
 -- 1. Inserir Pessoas (Passwords geradas com BCrypt para o valor: '123456')
 -- Usando o padrão GUID/UUID para os IDs
 INSERT INTO pessoa (id, nome, cpf, senha, cargo_funcao) VALUES
-('a1b2c3d4-e5f6-4a1b-8c9d-0123456789ab', 'Administrador do Sistema', '83908221087', '$2a$10$e8O6.9IeM5Vv0R/764cZp.J77L4i908uXW0EIn.4dpt2Q71a39u8e', 'ADMIN'),
-('b2c3d4e5-f6a1-4b2c-9d0e-123456789abc', 'Gestor de Operações', '31478207038', '$2a$10$e8O6.9IeM5Vv0R/764cZp.J77L4i908uXW0EIn.4dpt2Q71a39u8e', 'GESTOR'),
-('c3d4e5f6-a1b2-4c3d-a1f2-23456789abcd', 'Operador de Campo', '65324508085', '$2a$10$e8O6.9IeM5Vv0R/764cZp.J77L4i908uXW0EIn.4dpt2Q71a39u8e', 'OPERADOR');
+('a1b2c3d4-e5f6-4a1b-8c9d-0123456789ab', 'Administrador do Sistema', '83908221087', '$2a$10$.vdJrVayImsm8KCDTBvbxOmJqff6.Y1BebUJ3kD13c5dhmGx/bpmu', 'ADMIN'),
+('b2c3d4e5-f6a1-4b2c-9d0e-123456789abc', 'Gestor de Operações', '31478207038', '$2a$10$.vdJrVayImsm8KCDTBvbxOmJqff6.Y1BebUJ3kD13c5dhmGx/bpmu', 'GESTOR'),
+('c3d4e5f6-a1b2-4c3d-a1f2-23456789abcd', 'Operador de Campo', '65324508085', '$2a$10$.vdJrVayImsm8KCDTBvbxOmJqff6.Y1BebUJ3kD13c5dhmGx/bpmu', 'OPERADOR');
 
 -- 2. Inserir Ocorrências
 -- Ocorrência 1: Criada recentemente, ainda sem tratativa (Status: CRI)

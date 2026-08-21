@@ -26,17 +26,17 @@ public class PessoaController extends BaseController{
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PessoaResponse> salvarPessoa(@Valid @RequestBody CriarPessoaRequest request){
         var response = pessoaService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping
-    @PreAuthorize("hasRole('GESTOR') or (hasRole('OPERADOR') and #id == principal.id)")
+    @PreAuthorize("hasRole('GESTOR') or (hasRole('OPERADOR') and #request.id == principal.id)")
     public ResponseEntity<PessoaResponse> editarPessoa(@Valid @RequestBody EditarPessoaRequest request){
         var response = pessoaService.edit(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("{id}")

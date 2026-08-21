@@ -12,12 +12,12 @@ import org.springframework.validation.Errors;
 public class ValidarOcorrenciaExistente implements ValidadorNegocio<EditarOcorrenciaRequest> {
 
     private final OcorrenciaRepository ocorrenciaRepository;
+
     @Override
     public void validate(EditarOcorrenciaRequest target, Errors errors) {
         var existe = ocorrenciaRepository.existsById(target.getId());
 
-        if(existe) return;
-
-        errors.rejectValue("id", "id.inexistente", "Ocorrência não encontrada.");
+        if(!existe)
+            errors.rejectValue("id", "id.inexistente", "Ocorrência não encontrada.");
     }
 }

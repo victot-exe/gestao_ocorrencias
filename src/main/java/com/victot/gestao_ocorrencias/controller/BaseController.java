@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.victot.gestao_ocorrencias.entity.Pessoa;
+
 @RequiredArgsConstructor
 public class BaseController {
     protected TokenService tokenService;
@@ -21,7 +23,10 @@ public class BaseController {
 
     protected String getPessoaIdAutenticada() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.getCredentials() instanceof String token) {
+        if (auth != null && auth.getPrincipal() instanceof Pessoa pessoa) {
+            return pessoa.getId();
+        }
+        if (auth != null && auth.getCredentials() instanceof String token && tokenService != null) {
             return tokenService.getPessoaIdFromToken(token);
         }
         return null;

@@ -113,7 +113,7 @@ Este documento apresenta o mapeamento consolidado de todos os endpoints necessá
   - **Descrição**: Atribui um responsável (operador ou gestor) para condução e resolução da ocorrência.
   - **Permissão**: `hasRole('GESTOR')` / `hasRole('ADMIN')`
 
-- `[ ] PENDENTE` **`GET /ocorrencias/filtrar`**
+- `[x] IMPLEMENTADO` **`GET /ocorrencias/filtrar`**
   - **Descrição**: Consulta avançada com filtros múltiplos (intervalo de datas, modalidade, status, pessoa abertura e responsável).
   - **Permissão**: `hasRole('GESTOR')` / `hasRole('ADMIN')`
 

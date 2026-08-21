@@ -2,6 +2,9 @@ package com.victot.gestao_ocorrencias.controller;
 
 import com.victot.gestao_ocorrencias.dtos.request.ocorrencias.CriarOcorrenciaRequest;
 import com.victot.gestao_ocorrencias.dtos.request.ocorrencias.EditarOcorrenciaRequest;
+import com.victot.gestao_ocorrencias.dtos.request.ocorrencias.FiltroOcorrenciaBase;
+import com.victot.gestao_ocorrencias.dtos.request.ocorrencias.FiltroOcorrenciaPorPessoa;
+import com.victot.gestao_ocorrencias.dtos.response.ocorrencias.OcorrenciaDetalhadoResponse;
 import com.victot.gestao_ocorrencias.dtos.response.ocorrencias.OcorrenciaResponseBase;
 import com.victot.gestao_ocorrencias.service.OcorrenciaService;
 import jakarta.validation.Valid;
@@ -22,8 +25,6 @@ import org.springframework.web.bind.annotation.*;
 public class OcorrenciaController extends BaseController {
 
     private final OcorrenciaService ocorrenciaService;
-//TODO para os paginados adicionar request que contem filtros de data e tal, proximos passos
-//TODO trocar o response do get por id para ter tambem a descrição, será usaddo em conjunto com o paginado de tratativas
 
     //region POST
     @PostMapping
@@ -38,32 +39,33 @@ public class OcorrenciaController extends BaseController {
     //region GET
     @GetMapping("{id}")
     @PreAuthorize("hasRole('OPERADOR')")
-    public ResponseEntity<OcorrenciaResponseBase> buscar(@PathVariable String id){
+    public ResponseEntity<OcorrenciaDetalhadoResponse> buscar(@PathVariable String id){
         var response = ocorrenciaService.getById(id);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("retornar-paginado/{idPessoaAbertura}")
+    @GetMapping("por-pessoa")
     @PreAuthorize("hasRole('GESTOR')")
     public ResponseEntity<Page<OcorrenciaResponseBase>> pageableByIdPessoa(@ParameterObject @PageableDefault(size = 15, sort = "dataHoraOcorrencia", direction = Sort.Direction.ASC)Pageable pageable,
-                                                                           @PathVariable String idPessoaAbertura){//POSSO DEIXAR ISSO AQUI ACEITANDO NULL? QUANDO FOR ALGUEM OPERADOR pega do token e ignora o parametro, se for admin ou gestor pega do parametro é uma boa pratica ou é melhor ter dois endpoints?
+                                                                           @ParameterObject FiltroOcorrenciaPorPessoa filtro){
 
-        var response = ocorrenciaService.getPageableByIdPessoa(idPessoaAbertura, pageable);
+        var response = ocorrenciaService.getPageableWithFilter(filtro, pageable);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("retornar-paginado")
-    @PreAuthorize("hasRole('GESTOR')")//Somente admin e gestor podem trazer de todos
+    @GetMapping()
+    @PreAuthorize("hasRole('GESTOR')")
     public ResponseEntity<Page<OcorrenciaResponseBase>> pageable(@ParameterObject @PageableDefault(size = 15, sort = "dataHoraOcorrencia", direction = Sort.Direction.ASC)Pageable pageable){
         var response = ocorrenciaService.getPageable(pageable);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("minhas/retornar-paginado")
+    @GetMapping("minhas")
     @PreAuthorize("hasRole('OPERADOR')")
-    public ResponseEntity<Page<OcorrenciaResponseBase>> minhasPageble(@ParameterObject @PageableDefault(size = 15, sort = "dataHoraOcorrencia", direction = Sort.Direction.ASC)Pageable pageable){
+    public ResponseEntity<Page<OcorrenciaResponseBase>> minhasPageable(@ParameterObject @PageableDefault(size = 15, sort = "dataHoraOcorrencia", direction = Sort.Direction.ASC)Pageable pageable,
+                                                                       @ParameterObject FiltroOcorrenciaBase request){
         var idPessoa = getPessoaIdAutenticada();
-        var response = ocorrenciaService.getPageableByIdPessoa(idPessoa, pageable);
+        var response = ocorrenciaService.getPageableWithFilter(idPessoa, request, pageable);
         return ResponseEntity.ok(response);
     }
     //endregion
@@ -75,7 +77,16 @@ public class OcorrenciaController extends BaseController {
         request.setPessoaAberturaId(getPessoaIdAutenticada());
 
         OcorrenciaResponseBase response = ocorrenciaService.edit(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.ok(response);
+    }
+    //endregion
+
+    //region DELETE
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable String id){
+        ocorrenciaService.delete(id);
+        return ResponseEntity.noContent().build();
     }
     //endregion
 }

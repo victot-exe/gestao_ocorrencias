@@ -34,4 +34,12 @@ public class TratativaOcorrencia {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pessoa_id", nullable = false)
     private Pessoa pessoa;
+
+    public TratativaOcorrencia(Pessoa pessoa,  Ocorrencia ocorrencia, String descricao, StatusOcorrencia status, LocalDateTime dataHoraTratativa) {
+        this.pessoa = pessoa;
+        this.ocorrencia = ocorrencia;
+        this.descricao = descricao;
+        this.status = status;
+        this.dataHoraTratativa = dataHoraTratativa;
+    }
 }

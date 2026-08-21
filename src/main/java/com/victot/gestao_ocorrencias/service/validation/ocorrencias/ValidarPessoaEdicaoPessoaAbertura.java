@@ -14,12 +14,12 @@ public class ValidarPessoaEdicaoPessoaAbertura implements ValidadorNegocio<Edita
     private final OcorrenciaRepository ocorrenciaRepository;
     @Override
     public void validate(EditarOcorrenciaRequest target, Errors errors) {
-        var ocorrencia = ocorrenciaRepository.findById(target.getId())
-                .orElse(null);//TODO ver como melhorar isso aqui ja que essa parte que existe eu checo em outra parte não coloquei o lançamento do erro aqui. só retornei e deixei o fluxo seguir
-        if(ocorrencia == null) return;
+        ocorrenciaRepository.findById(target.getId()).ifPresent(ocorrencia -> {
+            var pessoaAbertura = ocorrencia.getPessoaAbertura();
 
-        if(target.getPessoaAberturaId().equals(ocorrencia.getPessoaAbertura().getId())) return;
-
-        errors.rejectValue("idPessoaAbertura", "unautorized", "Você não tem permissão para editar esta ocorrência.");
+            if (pessoaAbertura == null || !pessoaAbertura.getId().equals(target.getPessoaAberturaId())) {
+                errors.rejectValue("pessoaAberturaId", "unauthorized", "Você não tem permissão para editar esta ocorrência.");
+            }
+        });
     }
 }
