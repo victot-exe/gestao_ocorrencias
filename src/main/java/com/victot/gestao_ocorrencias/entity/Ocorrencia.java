@@ -42,6 +42,9 @@ public class Ocorrencia {
     @OneToMany(mappedBy = "ocorrencia", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TratativaOcorrencia> tratativas = new ArrayList<>();
 
+    @OneToMany(mappedBy = "ocorrencia", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MidiaOcorrencia> midias = new ArrayList<>();
+
     public Ocorrencia(Pessoa pessoaAbertura, TipoModalidade modalidade, String descricao, LocalDateTime dataHoraOcorrencia) {
         this.pessoaAbertura = pessoaAbertura;
         this.modalidade = modalidade;

@@ -21,7 +21,9 @@ class AuthControllerTest extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token", notNullValue()));
+                .andExpect(jsonPath("$.token", notNullValue()))
+                .andExpect(jsonPath("$.type", org.hamcrest.Matchers.is("Bearer")))
+                .andExpect(jsonPath("$.role", org.hamcrest.Matchers.is("ADMIN")));
     }
 
     @Test
