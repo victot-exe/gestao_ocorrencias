@@ -9,5 +9,5 @@ public interface PessoaRepository extends JpaRepository<Pessoa, String> {
     boolean existsByCpf(String cpf);
     boolean existsByCpfAndIdNot(String cpf, String id);
 
-    Optional<Pessoa> findByCpf(String cpf);//TODO Conferir o retorno
+    Optional<Pessoa> findByCpf(String cpf);
 }

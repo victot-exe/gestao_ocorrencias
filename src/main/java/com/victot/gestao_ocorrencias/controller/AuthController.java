@@ -29,8 +29,9 @@ public class AuthController {
         var authToken = new UsernamePasswordAuthenticationToken(request.cpf(), request.password());
         var auth = maneger.authenticate(authToken);
 
-        var tokenJWT = tokenService.generateToken((Pessoa) Objects.requireNonNull(auth.getPrincipal()));
+        Pessoa pessoa = (Pessoa) Objects.requireNonNull(auth.getPrincipal());
+        var tokenJWT = tokenService.generateToken(pessoa);
 
-        return ResponseEntity.ok(new TokenResponse(tokenJWT));
+        return ResponseEntity.ok(new TokenResponse(tokenJWT, pessoa.getPerfil().name()));
     }
 }
