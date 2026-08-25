@@ -114,4 +114,23 @@ class OcorrenciaControllerTest extends BaseIntegrationTest {
                         .header("Authorization", getOperadorToken()))
                 .andExpect(status().isForbidden());
     }
+
+    @Test
+    @DisplayName("Deve exportar relatório CSV com sucesso quando for Gestor")
+    void deveExportarCsvQuandoGestor() throws Exception {
+        mockMvc.perform(get("/ocorrencias/exportar/csv")
+                        .header("Authorization", getGestorToken()))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "text/csv; charset=UTF-8"))
+                .andExpect(header().exists("Content-Disposition"))
+                .andExpect(content().string(containsString("ID Ocorrencia;Data Ocorrencia;Modalidade")));
+    }
+
+    @Test
+    @DisplayName("Deve bloquear Operador ao tentar exportar CSV")
+    void deveBloquearExportarCsvQuandoOperador() throws Exception {
+        mockMvc.perform(get("/ocorrencias/exportar/csv")
+                        .header("Authorization", getOperadorToken()))
+                .andExpect(status().isForbidden());
+    }
 }

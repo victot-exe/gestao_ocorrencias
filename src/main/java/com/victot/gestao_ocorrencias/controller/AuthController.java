@@ -32,6 +32,6 @@ public class AuthController {
         Pessoa pessoa = (Pessoa) Objects.requireNonNull(auth.getPrincipal());
         var tokenJWT = tokenService.generateToken(pessoa);
 
-        return ResponseEntity.ok(new TokenResponse(tokenJWT, pessoa.getPerfil().name()));
+        return ResponseEntity.ok(new TokenResponse(tokenJWT, pessoa.getPerfil().name(), pessoa.getNome()));
     }
 }

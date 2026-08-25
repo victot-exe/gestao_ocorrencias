@@ -14,10 +14,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("ocorrencias")
@@ -67,6 +71,19 @@ public class OcorrenciaController extends BaseController {
         var idPessoa = getPessoaIdAutenticada();
         var response = ocorrenciaService.getPageableWithFilter(idPessoa, request, pageable);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("exportar/csv")
+    @PreAuthorize("hasRole('GESTOR')")
+    public ResponseEntity<byte[]> exportarCsv() {
+        byte[] csvBytes = ocorrenciaService.exportarCsv();
+        String dataAtual = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        String filename = dataAtual + "_relatorio.csv";
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .header(HttpHeaders.CONTENT_TYPE, "text/csv; charset=UTF-8")
+                .body(csvBytes);
     }
     //endregion
 

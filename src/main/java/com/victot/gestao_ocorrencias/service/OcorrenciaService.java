@@ -21,6 +21,8 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import jakarta.persistence.criteria.Predicate;
 
+import java.nio.charset.StandardCharsets;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,13 +154,76 @@ public class OcorrenciaService {
     }
     //endregion
 
+    //region exportarCsv
+    public byte[] exportarCsv() {
+        var ocorrencias = ocorrenciaRepository.findAllComTratativas();
+        var dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+        var sb = new StringBuilder();
+        // BOM UTF-8 para Excel abrir com acentuação correta
+        sb.append("\uFEFF");
+
+        // Cabeçalho CSV
+        sb.append("ID Ocorrencia;Data Ocorrencia;Modalidade;Status Atual;Pessoa Abertura;Descricao Ocorrencia;")
+          .append("ID Tratativa;Data Tratativa;Responsavel Tratativa;Status Tratativa;Descricao Tratativa\n");
+
+        for (var oc : ocorrencias) {
+            String idOc = oc.getId() != null ? oc.getId() : "";
+            String dataOc = oc.getDataHoraOcorrencia() != null ? oc.getDataHoraOcorrencia().format(dtf) : "";
+            String modalidade = oc.getModalidade() != null ? oc.getModalidade().getNome() : "";
+            String statusAtual = oc.getStatusAtual() != null ? oc.getStatusAtual().getDescricao() : "";
+            String pessoaAbertura = oc.getPessoaAbertura() != null ? oc.getPessoaAbertura().getNome() : "";
+            String descricaoOc = oc.getDescricao() != null ? oc.getDescricao() : "";
+
+            String baseOcorrencia = String.format(
+                    "\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"",
+                    escaparCsv(idOc),
+                    escaparCsv(dataOc),
+                    escaparCsv(modalidade),
+                    escaparCsv(statusAtual),
+                    escaparCsv(pessoaAbertura),
+                    escaparCsv(descricaoOc)
+            );
+
+            if (oc.getTratativas() == null || oc.getTratativas().isEmpty()) {
+                sb.append(baseOcorrencia).append(";\"\";\"\";\"\";\"\";\"\"\n");
+            } else {
+                for (var tr : oc.getTratativas()) {
+                    String idTr = tr.getId() != null ? tr.getId() : "";
+                    String dataTr = tr.getDataHoraTratativa() != null ? tr.getDataHoraTratativa().format(dtf) : "";
+                    String pessoaTr = tr.getPessoa() != null ? tr.getPessoa().getNome() : "";
+                    String statusTr = tr.getStatus() != null ? tr.getStatus().getDescricao() : "";
+                    String descricaoTr = tr.getDescricao() != null ? tr.getDescricao() : "";
+
+                    sb.append(baseOcorrencia).append(";");
+                    sb.append(String.format(
+                            "\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"\n",
+                            escaparCsv(idTr),
+                            escaparCsv(dataTr),
+                            escaparCsv(pessoaTr),
+                            escaparCsv(statusTr),
+                            escaparCsv(descricaoTr)
+                    ));
+                }
+            }
+        }
+
+        return sb.toString().getBytes(StandardCharsets.UTF_8);
+    }
+
+    private String escaparCsv(String valor) {
+        if (valor == null) return "";
+        return valor.replace("\"", "\"\"").replace("\n", " ").replace("\r", "");
+    }
+    //endregion
+
     //region private methods
     private OcorrenciaResponseBase convertToOcorrenciaBaseResponse(Ocorrencia ocorrencia){
-        return new OcorrenciaResponseBase(ocorrencia.getId(), ocorrencia.getPessoaAbertura().getNome(), ocorrencia.getModalidade().getCodigo(), ocorrencia.getDataHoraOcorrencia());
+        return new OcorrenciaResponseBase(ocorrencia.getId(), ocorrencia.getPessoaAbertura().getNome(), ocorrencia.getModalidade().getCodigo(), ocorrencia.getDataHoraOcorrencia(), ocorrencia.getStatusAtual());
     }
 
     private OcorrenciaDetalhadoResponse convertToResponseDetalhado(Ocorrencia ocorrencia){
-        return new OcorrenciaDetalhadoResponse(ocorrencia.getId(), ocorrencia.getPessoaAbertura().getNome(), ocorrencia.getModalidade().getCodigo(), ocorrencia.getDataHoraOcorrencia(), ocorrencia.getDescricao());
+        return new OcorrenciaDetalhadoResponse(ocorrencia.getId(), ocorrencia.getPessoaAbertura().getNome(), ocorrencia.getModalidade().getCodigo(), ocorrencia.getDataHoraOcorrencia(), ocorrencia.getDescricao(), ocorrencia.getStatusAtual());
     }
     //endregion
 }
