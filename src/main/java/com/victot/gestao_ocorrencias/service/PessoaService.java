@@ -106,7 +106,8 @@ public class PessoaService {
         return new PessoaResponse(
                 entity.getId(),
                 entity.getNome(),
-                entity.getCpf()
+                entity.getCpf(),
+                entity.getPerfil()
         );
     }
     //endregion
